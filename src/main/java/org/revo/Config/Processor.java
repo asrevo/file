@@ -5,18 +5,18 @@ import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 
 public interface Processor {
-    String ToFile = "ToFile";
+    String file_queue = "file_queue";
 
-    @Input("ToFile")
-    MessageChannel ToFile();
+    @Input("file_queue")
+    MessageChannel file_queue();
 
-    String ToTube_store = "ToTube_store";
+    String tube_store = "tube_store";
 
-    @Output("ToTube_store")
-    MessageChannel ToTube_store();
+    @Output("tube_store")
+    MessageChannel tube_store();
 
-    String ToFeedBack_push = "ToFeedBack_push";
+    String feedBack_push = "feedBack_push";
 
-    @Output("ToFeedBack_push")
-    MessageChannel ToFeedBack_push();
+    @Output("feedBack_push")
+    MessageChannel feedBack_push();
 }

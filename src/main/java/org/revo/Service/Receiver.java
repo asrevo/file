@@ -23,7 +23,7 @@ public class Receiver {
     @Autowired
     private Processor processor;
 
-    @StreamListener(value = Processor.ToFile)
+    @StreamListener(value = Processor.file_queue)
     public void receive(Message<File> file) {
         log.info("recive "+file.getPayload().getId());
 //        processor.ToFeedBack_push().send(MessageBuilder.withPayload(new Stater(file.getPayload(), Queue.FILE, State.ON_GOING)).build());
