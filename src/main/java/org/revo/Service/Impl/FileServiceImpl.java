@@ -51,9 +51,8 @@ public class FileServiceImpl implements FileService {
                     master.setMeta(file.getMeta());
                     master.setFile(file.getId());
                     s3Service.push(master.getId(), path.toFile());
+                    log.info("send tube_store " + master.getId());
                     processor.tube_store().send(MessageBuilder.withPayload(master).build());
-
-//                    processor.ToFeedBack_push().send(MessageBuilder.withPayload(new Stater(master, Queue.TUBE_STORE, State.QUEUED)).build());
                 }
                 stored.toFile().delete();
             } else {
