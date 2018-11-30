@@ -7,6 +7,7 @@ import org.revo.Domain.File;
 import org.revo.Domain.Master;
 import org.revo.Service.FileService;
 import org.revo.Service.S3Service;
+import org.revo.Service.TempFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 
-import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.exists;
 import static org.apache.commons.io.FileUtils.copyURLToFile;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
@@ -34,11 +34,13 @@ public class FileServiceImpl implements FileService {
     private S3Service s3Service;
     @Autowired
     private Processor processor;
+    @Autowired
+    private TempFileService tempFileService;
 
     @Override
     public void process(File file) {
         if (file.getUrl() != null && !file.getUrl().isEmpty()) {
-            Path stored = store(file);
+            Path stored = store("queue", file);
             if (stored != null && exists(stored)) {
                 List<Path> walk = walk(stored);
                 for (Path path : walk) {
@@ -54,16 +56,15 @@ public class FileServiceImpl implements FileService {
                     log.info("send tube_store " + master.getId());
                     processor.tube_store().send(MessageBuilder.withPayload(master).build());
                 }
-                stored.toFile().delete();
             } else {
             }
         }
     }
 
     @Override
-    public Path store(File file) {
+    public Path store(String fun, File file) {
         try {
-            Path tempFile = createTempDirectory("video").resolve(getName(file.getUrl()));
+            Path tempFile = tempFileService.tempFile("queue", getName(file.getUrl()));
             if (haveSpaceFor(file.getUrl(), tempFile.toFile()))
                 copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
             else {

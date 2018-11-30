@@ -10,6 +10,6 @@ import java.nio.file.Path;
 public interface FileService {
     void process(File file);
 
-    Path store(File file);
+    Path store(String fun, File file);
 
 }
