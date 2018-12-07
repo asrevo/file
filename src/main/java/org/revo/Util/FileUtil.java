@@ -44,17 +44,21 @@ public class FileUtil {
     //    @Override
     public static List<Path> walk(Path stored) {
         List<Path> files = new ArrayList<>();
-        if (is(stored, "avi mkv rmvb mp4 flv mov mpeg")) {
+        String videoExt = "avi mkv rmvb mp4 flv mov mpeg webm wmv ogg";
+        if (is(stored, videoExt)) {
             files.add(stored);
-        } else if (is(stored, "zip rar")) {
-            Path unzip = unzip(stored.toFile());
-            if (unzip != null) {
-                try {
-                    Files.walk(unzip)
-                            .filter(it -> isRegularFile(it))
-                            .filter(it -> is(it, "avi mkv rmvb mp4 flv mov mpeg"))
-                            .forEach(files::add);
-                } catch (IOException e) {
+        } else {
+            String compressedExt = "zip rar";
+            if (is(stored, compressedExt)) {
+                Path unzip = unzip(stored.toFile());
+                if (unzip != null) {
+                    try {
+                        Files.walk(unzip)
+                                .filter(it -> isRegularFile(it))
+                                .filter(it -> is(it, videoExt))
+                                .forEach(files::add);
+                    } catch (IOException e) {
+                    }
                 }
             }
         }
