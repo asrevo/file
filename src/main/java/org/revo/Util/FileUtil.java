@@ -11,10 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static java.nio.file.Files.isRegularFile;
 import static java.util.Arrays.asList;
@@ -22,15 +20,11 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 
 public class FileUtil {
 
-    public static Path unzip(File tempFile) {
-        try {
-            ZipFile zipFile = new ZipFile(tempFile);
-            Path path = Paths.get(tempFile.getParent(), FilenameUtils.getBaseName(tempFile.toString()));
-            zipFile.extractAll(path.toString());
-            return path;
-        } catch (ZipException e) {
-            return null;
-        }
+    public static Stream<Path> unzip(Path stored) throws ZipException, IOException {
+        ZipFile zipFile = new ZipFile(stored.toFile());
+        Path path = stored.getParent().resolve(FilenameUtils.getBaseName(stored.toString()));
+        zipFile.extractAll(path.toString());
+        return Files.walk(path).filter(it -> isRegularFile(it));
     }
 
     public static boolean is(Path tempFile, String ext) {
@@ -41,28 +35,14 @@ public class FileUtil {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    //    @Override
-    public static List<Path> walk(Path stored) {
-        List<Path> files = new ArrayList<>();
+    public static Stream<Path> walk(Path stored) throws ZipException, IOException {
         String videoExt = "avi mkv rmvb mp4 flv mov mpeg webm wmv ogg";
-        if (is(stored, videoExt)) {
-            files.add(stored);
-        } else {
-            String compressedExt = "zip rar";
-            if (is(stored, compressedExt)) {
-                Path unzip = unzip(stored.toFile());
-                if (unzip != null) {
-                    try {
-                        Files.walk(unzip)
-                                .filter(it -> isRegularFile(it))
-                                .filter(it -> is(it, videoExt))
-                                .forEach(files::add);
-                    } catch (IOException e) {
-                    }
-                }
-            }
-        }
-        return files;
+        ZipFile zipFile = new ZipFile(stored.toString());
+        if (zipFile.isValidZipFile()) {
+            return unzip(stored).filter(it -> is(it, videoExt));
+        } else if (is(stored, videoExt)) {
+            return Stream.of(stored);
+        } else return Stream.empty();
     }
 
     public static int sizeOf(String url) {

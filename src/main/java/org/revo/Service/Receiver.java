@@ -1,6 +1,7 @@
 package org.revo.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.lingala.zip4j.exception.ZipException;
 import org.revo.Config.Processor;
 import org.revo.Domain.File;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class Receiver {
     private TempFileService tempFileService;
 
     @StreamListener(value = Processor.file_queue)
-    public void queue(Message<File> file) throws IOException {
+    public void queue(Message<File> file) throws IOException, ZipException {
         tempFileService.clear("queue");
         log.info("receive file_queue " + file.getPayload().getId());
         fileService.process(file.getPayload());
