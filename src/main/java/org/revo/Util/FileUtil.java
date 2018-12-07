@@ -44,7 +44,7 @@ public class FileUtil {
     //    @Override
     public static List<Path> walk(Path stored) {
         List<Path> files = new ArrayList<>();
-        if (is(stored, "avi mkv rmvb mp4 flv mov")) {
+        if (is(stored, "avi mkv rmvb mp4 flv mov mpeg")) {
             files.add(stored);
         } else if (is(stored, "zip rar")) {
             Path unzip = unzip(stored.toFile());
@@ -52,7 +52,7 @@ public class FileUtil {
                 try {
                     Files.walk(unzip)
                             .filter(it -> isRegularFile(it))
-                            .filter(it -> is(it, "avi mkv rmvb mp4 flv mov"))
+                            .filter(it -> is(it, "avi mkv rmvb mp4 flv mov mpeg"))
                             .forEach(files::add);
                 } catch (IOException e) {
                 }
