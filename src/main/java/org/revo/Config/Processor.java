@@ -15,9 +15,4 @@ public interface Processor {
 
     @Output("tube_store")
     MessageChannel tube_store();
-
-    String feedback_queue = "feedback_queue";
-
-    @Output("feedback_queue")
-    MessageChannel feedback_queue();
 }
