@@ -68,6 +68,7 @@ public class FileServiceImpl implements FileService {
             copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
             return tempFile;
         } catch (IOException e) {
+            log.info("error " + e.getMessage());
             return null;
         }
     }
