@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class File extends Base {
     private String url;
+    private String ip;
 }
