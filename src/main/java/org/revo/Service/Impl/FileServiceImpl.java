@@ -23,7 +23,6 @@ import static java.nio.file.Files.exists;
 import static org.apache.commons.io.FileUtils.copyURLToFile;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 import static org.apache.commons.io.FilenameUtils.getName;
-import static org.revo.Util.FileUtil.haveSpaceFor;
 import static org.revo.Util.FileUtil.walk;
 
 /**
@@ -58,7 +57,6 @@ public class FileServiceImpl implements FileService {
                     log.info("send tube_store " + master.getId());
                     processor.tube_store().send(MessageBuilder.withPayload(master).build());
                 });
-            } else {
             }
         }
     }
@@ -67,11 +65,7 @@ public class FileServiceImpl implements FileService {
     public Path store(String fun, File file) {
         try {
             Path tempFile = tempFileService.tempFile("queue", getName(file.getUrl()));
-            if (haveSpaceFor(file.getUrl(), tempFile.toFile()))
-                copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
-            else {
-                return null;
-            }
+            copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
             return tempFile;
         } catch (IOException e) {
             return null;
