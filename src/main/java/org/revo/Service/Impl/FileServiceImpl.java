@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Files.exists;
-import static org.apache.commons.io.FileUtils.copyURLToFile;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 import static org.apache.commons.io.FilenameUtils.getName;
+import static org.revo.Util.FileUtil.download;
 import static org.revo.Util.FileUtil.walk;
 
 /**
@@ -65,7 +65,8 @@ public class FileServiceImpl implements FileService {
     public Path store(String fun, File file) {
         try {
             Path tempFile = tempFileService.tempFile("queue", getName(new URL(file.getUrl()).getPath()));
-            copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
+//            copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
+            download(file, tempFile.toFile());
             return tempFile;
         } catch (IOException e) {
             log.info("error " + e.getMessage());

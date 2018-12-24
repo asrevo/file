@@ -2,6 +2,7 @@ package org.revo.Util;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -70,4 +71,13 @@ public class FileUtil {
         file.delete();
         return (i != 0 && i < freeSpace);
     }
+
+
+    public static void download(org.revo.Domain.File file, File to) throws IOException {
+        URL url = new URL(file.getUrl());
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setRequestProperty("X-FORWARDED-FOR", "154.188.74.177");
+        FileUtils.copyInputStreamToFile(urlConnection.getInputStream(), to);
+    }
+
 }
