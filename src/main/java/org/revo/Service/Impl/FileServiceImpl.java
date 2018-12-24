@@ -64,7 +64,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Path store(String fun, File file) {
         try {
-            Path tempFile = tempFileService.tempFile("queue", getName(file.getUrl()));
+            Path tempFile = tempFileService.tempFile("queue", getName(new URL(file.getUrl()).getPath()));
             copyURLToFile(new URL(file.getUrl()), tempFile.toFile());
             return tempFile;
         } catch (IOException e) {
