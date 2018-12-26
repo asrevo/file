@@ -7,9 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -75,7 +73,8 @@ public class FileUtil {
 
     public static void download(org.revo.Domain.File file, File to) throws IOException {
         URL url = new URL(file.getUrl());
-        URLConnection urlConnection = url.openConnection();
+        InetSocketAddress sa = new InetSocketAddress(file.getIp(), 80);
+        URLConnection urlConnection = url.openConnection(new Proxy(Proxy.Type.DIRECT, sa));
         urlConnection.setRequestProperty("X-FORWARDED-FOR", file.getIp());
         FileUtils.copyInputStreamToFile(urlConnection.getInputStream(), to);
     }
