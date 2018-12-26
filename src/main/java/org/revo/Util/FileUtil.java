@@ -7,13 +7,14 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static java.net.Proxy.Type.HTTP;
 import static java.nio.file.Files.isRegularFile;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FilenameUtils.getExtension;
@@ -73,9 +74,9 @@ public class FileUtil {
 
 
     public static void download(org.revo.Domain.File file, File to) throws IOException {
-        URLConnection urlConnection = new URL(file.getUrl()).openConnection(new Proxy(HTTP, new InetSocketAddress(file.getIp(), 80)));
-        urlConnection.setRequestProperty("X-FORWARDED-FOR", file.getIp());
-        FileUtils.copyInputStreamToFile(urlConnection.getInputStream(), to);
+        URLConnection conn = new URL(file.getUrl()).openConnection();
+        conn.setRequestProperty("X-FORWARDED-FOR", file.getIp());
+        FileUtils.copyInputStreamToFile(conn.getInputStream(), to);
     }
 
 }
