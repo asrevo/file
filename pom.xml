@@ -50,6 +50,11 @@
             <version>3.6.4</version>
         </dependency>
         <dependency>
+            <groupId>org.revo.ffmpeg</groupId>
+            <artifactId>cli</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
@@ -78,13 +83,13 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-kinesis</artifactId>
-            <version>1.0.0.RELEASE</version>
-        </dependency>
--->
+        <!--
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-stream-binder-kinesis</artifactId>
+                    <version>1.0.0.RELEASE</version>
+                </dependency>
+        -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-aws</artifactId>
@@ -204,6 +209,14 @@
         </plugins>
     </build>
     <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-ashraf-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/ashraf/maven</url>
+        </repository>
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
