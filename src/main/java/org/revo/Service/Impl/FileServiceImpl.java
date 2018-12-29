@@ -53,7 +53,7 @@ public class FileServiceImpl implements FileService {
                     master.setMeta(file.getMeta());
                     master.setFile(file.getId());
                     master.setExt(getExtension(w.toString()));
-                    s3Service.push(file.getId() + "/" + master.getId() + "/" + master.getId(), w.toFile());
+                    s3Service.push(file.getId() + "/" + master.getId() + "/" + master.getId() + "/" + master.getId(), w.toFile());
                     log.info("send tube_store " + master.getId());
                     processor.tube_store().send(MessageBuilder.withPayload(master).build());
                 });
