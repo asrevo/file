@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Files.exists;
-import static org.apache.commons.io.FilenameUtils.getBaseName;
-import static org.apache.commons.io.FilenameUtils.getName;
+import static org.apache.commons.io.FilenameUtils.*;
 import static org.revo.Util.FileUtil.download;
 import static org.revo.Util.FileUtil.walk;
 
@@ -53,6 +52,7 @@ public class FileServiceImpl implements FileService {
                         master.setTitle(getBaseName(w.toString()));
                     master.setMeta(file.getMeta());
                     master.setFile(file.getId());
+                    master.setExt(getExtension(w.toString()));
                     s3Service.push(file.getId() + "/" + master.getId() + "/" + master.getId(), w.toFile());
                     log.info("send tube_store " + master.getId());
                     processor.tube_store().send(MessageBuilder.withPayload(master).build());
