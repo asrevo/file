@@ -1,32 +1,29 @@
 package org.revo.Service.Impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.revo.Domain.User;
 import org.revo.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by ashraf on 22/04/17.
  */
 @Service
 public class UserServiceImpl implements UserService {
-//    @Autowired
-//    private TokenStore tokenStore;
+    @Autowired
+    private ObjectMapper mapper;
 
     @Override
-    public Optional<String> current() {
-/*
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            if (authentication instanceof OAuth2Authentication) {
-                final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
-                Object principal = tokenStore.readAccessToken(details.getTokenValue()).getAdditionalInformation().get("user");
-                return Optional.ofNullable(((Map<String, Object>) principal).get("id").toString());
-            } else if (authentication instanceof AnonymousAuthenticationToken) {
-                return Optional.of("-1");
-            } else return Optional.of("-1");
-        }
-*/
-        return Optional.of("-1");
+    public Mono<String> current() {
+        return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Authentication::getPrincipal)
+                .cast(Jwt.class).map(Jwt::getClaims)
+                .map(it -> it.get("user"))
+                .map(it -> mapper.convertValue(it, User.class)).map(User::getId);
     }
 }

@@ -1,10 +1,10 @@
 package org.revo.Service;
 
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by ashraf on 22/04/17.
  */
 public interface UserService {
-    Optional<String> current();
+    Mono<String> current();
 }
